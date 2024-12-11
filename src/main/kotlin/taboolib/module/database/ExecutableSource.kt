@@ -1,6 +1,6 @@
 package taboolib.module.database
 
-import taboolib.common.platform.function.warning
+import org.slf4j.LoggerFactory
 import taboolib.common.util.unsafeLazy
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -19,6 +19,7 @@ open class ExecutableSource(val table: Table<*, *>, var dataSource: DataSource, 
 
     /** 结果处理器 */
     internal val processors = ArrayList<ResultProcessor>()
+    val logger = LoggerFactory.getLogger(this::class.java)
 
     /** 数据库连接 */
     internal val connection by unsafeLazy {
@@ -82,9 +83,9 @@ open class ExecutableSource(val table: Table<*, *>, var dataSource: DataSource, 
                         action?.elements?.forEachIndexed { index, any -> statement.setObject(index + 1, any) }
                         statement.executeQuery().use { func(it) }.also { action?.callFinally(statement, connection) }
                     }
-                } catch (ex: SQLException) {
-                    warning("Query: $query")
-                    warning("Parameters (${action?.elements?.size ?: 0}): ${action?.elements}")
+                } catch (ex: SQLException){
+                    logger.warn("Query: $query")
+                    logger.warn("Parameters (${action?.elements?.size ?: 0}): ${action?.elements}")
                     throw ex
                 }
             }
@@ -100,8 +101,8 @@ open class ExecutableSource(val table: Table<*, *>, var dataSource: DataSource, 
                     statement.executeUpdate().also { action?.callFinally(statement, connection) }
                 }
             } catch (ex: SQLException) {
-                warning("Query: $query")
-                warning("Parameters (${action?.elements?.size ?: 0}): ${action?.elements}")
+                logger.warn("Query: $query")
+                logger.warn("Parameters (${action?.elements?.size ?: 0}): ${action?.elements}")
                 throw ex
             }
         }.also { processors += it }
@@ -213,8 +214,8 @@ open class ExecutableSource(val table: Table<*, *>, var dataSource: DataSource, 
                             statement.executeQuery().use { func(it) }
                         }
                     } catch (ex: SQLException) {
-                        warning("Query: $sql")
-                        warning("Parameters (2): [${table.name},${index.name}]")
+                        logger.warn("Query: $sql")
+                        logger.warn("Parameters (2): [${table.name},${index.name}]")
                         throw ex
                     }
                 }

@@ -2,32 +2,14 @@ package taboolib.module.database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import taboolib.common.Inject
-import taboolib.common.env.RuntimeDependencies
-import taboolib.common.env.RuntimeDependency
-import taboolib.module.configuration.Config
-import taboolib.module.configuration.Configuration
+import me.regadpole.config.DatabaseSource
 import javax.sql.DataSource
 
-@Inject
-@RuntimeDependencies(
-    RuntimeDependency(
-        "!org.slf4j:slf4j-api:2.0.8",
-        test = "!org.slf4j_2_0_8.LoggerFactory",
-        relocate = ["!org.slf4j", "!org.slf4j_2_0_8"],
-        transitive = false
-    ),
-    RuntimeDependency(
-        "!com.zaxxer:HikariCP:4.0.3",
-        test = "!com.zaxxer.hikari_4_0_3.HikariDataSource",
-        relocate = ["!com.zaxxer.hikari", "!com.zaxxer.hikari_4_0_3", "!org.slf4j", "!org.slf4j_2_0_8"],
-        transitive = false
-    )
-)
 object Database {
 
-    @Config("datasource.yml")
-    lateinit var settingsFile: Configuration
+//    @Config("datasource.yml")
+//    lateinit var settingsFile: Configuration
+    lateinit var settingsFile: DatabaseSource
 
     /**
      * 创建一个关闭数据库连接的回调函数
@@ -77,20 +59,15 @@ object Database {
                 error("Unsupported host: $host")
             }
         }
-        config.isAutoCommit = settingsFile.getBoolean("DefaultSettings.AutoCommit", true)
-        config.minimumIdle = settingsFile.getInt("DefaultSettings.MinimumIdle", 1)
-        config.maximumPoolSize = settingsFile.getInt("DefaultSettings.MaximumPoolSize", 10)
-        config.validationTimeout = settingsFile.getLong("DefaultSettings.ValidationTimeout", 5000)
-        config.connectionTimeout = settingsFile.getLong("DefaultSettings.ConnectionTimeout", 30000)
-        config.idleTimeout = settingsFile.getLong("DefaultSettings.IdleTimeout", 600000)
-        config.maxLifetime = settingsFile.getLong("DefaultSettings.MaxLifetime", 1800000)
+        config.isAutoCommit = settingsFile.getBoolean("DefaultSettings.AutoCommit")
+        config.minimumIdle = settingsFile.getInt("DefaultSettings.MinimumIdle")
+        config.maximumPoolSize = settingsFile.getInt("DefaultSettings.MaximumPoolSize")
+        config.validationTimeout = settingsFile.getLong("DefaultSettings.ValidationTimeout")
+        config.connectionTimeout = settingsFile.getLong("DefaultSettings.ConnectionTimeout")
+        config.idleTimeout = settingsFile.getLong("DefaultSettings.IdleTimeout")
+        config.maxLifetime = settingsFile.getLong("DefaultSettings.MaxLifetime")
         if (settingsFile.contains("DefaultSettings.ConnectionTestQuery")) {
-            config.connectionTestQuery = settingsFile.getString("DefaultSettings.ConnectionTestQuery")
-        }
-        if (settingsFile.contains("DefaultSettings.DataSourceProperty")) {
-            settingsFile.getConfigurationSection("DefaultSettings.DataSourceProperty")?.getKeys(false)?.forEach { key ->
-                config.addDataSourceProperty(key, settingsFile.getString("DefaultSettings.DataSourceProperty.$key"))
-            }
+            config.connectionTestQuery = settingsFile.getString("DefaultSettings.ConnectionTestQuery", "")
         }
         return config
     }

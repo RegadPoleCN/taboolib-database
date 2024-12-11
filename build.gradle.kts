@@ -5,8 +5,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-group = "taboolib"
-version = "1.0-SNAPSHOT"
+group = "me.regadpole"
+version = "1.0.1-SNAPSHOT"
 
 repositories {
     mavenLocal()

@@ -108,7 +108,7 @@ class SQLite : ColumnBuilder() {
         name = "id"
         type = ColumnTypeSQLite.INTEGER
         extra {
-            options = arrayOf(ColumnOptionSQLite.NOTNULL, ColumnOptionSQLite.PRIMARY_KEY)
+            options = arrayOf(ColumnOptionSQLite.NOTNULL, ColumnOptionSQLite.PRIMARY_KEY, ColumnOptionSQLite.AUTOINCREMENT)
         }
     }
 

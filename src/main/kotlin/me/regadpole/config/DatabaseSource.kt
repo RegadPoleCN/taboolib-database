@@ -1,71 +1,51 @@
 package me.regadpole.config
 
-import org.spongepowered.configurate.ConfigurationNode
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader
+import top.alazeprt.aconfiguration.file.FileConfiguration
+import top.alazeprt.aconfiguration.file.YamlConfiguration
 import java.io.File
 
 class DatabaseSource() {
-    private lateinit var config: ConfigurationNode
+    private lateinit var config: FileConfiguration
 
-    constructor(node: ConfigurationNode) : this() {
-        this.config = node
+    constructor(config: FileConfiguration) : this() {
+        this.config = config
     }
 
     constructor(file: File) : this() {
-        this.config = YamlConfigurationLoader.builder().file(file).build().load()
+        this.config = YamlConfiguration.loadConfiguration(file)
     }
 
     /*method to obtain a string list from the yml file */
     fun getStringList( nodePath: String?): List<String?> {
-        val resultList: MutableList<String?> = ArrayList()
-        val subNode = config.node(nodePath)
-        if (subNode.isList) {
-            val list = subNode.childrenList()
-            for (item in list) {
-                resultList.add(item.string)
-            }
-        }
-        return resultList
+        return config.getStringList(nodePath)
     }
 
     /*method to obtain a long list from the yml file */
     fun getLongList( nodePath: String?): List<Long> {
-        val resultList: MutableList<Long> = ArrayList()
-        val subNode = config.node(nodePath)
-        if (subNode.isList) {
-            val list = subNode.childrenList()
-            for (item in list) {
-                resultList.add(item.long)
-            }
-        }
-        return resultList
+        return config.getLongList(nodePath)
     }
 
     /*method to get boolean value from yml file*/
     fun getBoolean( nodePath: String?): Boolean {
-        val aBoolean = config.node(nodePath!!.split(".")).boolean
-        return aBoolean
+        return config.getBoolean(nodePath)
     }
 
     /*method to get integer value from yml file*/
     fun getInt( nodePath: String?): Int {
-        val integer = config.node(nodePath!!.split(".")).int
-        return integer
+        return config.getInt(nodePath)
     }
 
     /*method to get string from yml file*/
     fun getString( nodePath: String?, default:String): String {
-        val string = config.node(nodePath!!.split(".")).string
-        return string?:default
+        return config.getString(nodePath, default)
     }
 
     /*method to get long value from yml file*/
     fun getLong( nodePath: String?): Long {
-        val long = config.node(nodePath!!.split(".")).long
-        return long
+        return config.getLong(nodePath)
     }
 
     fun contains(nodePath: String?): Boolean {
-        return !config.node(nodePath!!.split(".")).isNull
+        return config.contains(nodePath)
     }
 }

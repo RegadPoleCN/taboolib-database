@@ -1,15 +1,18 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     `maven-publish`
     java
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "1.9.25"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 group = "me.regadpole"
-version = "1.0.3-SNAPSHOT"
+version = "1.0.4-SNAPSHOT"
 
 repositories {
     mavenLocal()
+    maven("https://jitpack.io")
     mavenCentral()
 }
 
@@ -17,16 +20,23 @@ dependencies {
     implementation("com.google.guava:guava:21.0")
     compileOnly("org.slf4j:slf4j-api:2.0.8")
     implementation("com.zaxxer:HikariCP:4.0.3")
-    compileOnly("org.spongepowered:configurate-core:4.1.2")
-    compileOnly("org.spongepowered:configurate-yaml:4.1.2")
-    testImplementation(kotlin("test"))
+    compileOnly("com.github.alazeprt:AConfiguration:1.0")
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
 }
-kotlin {
-    jvmToolchain(17)
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xjvm-default=all")
+    }
+}
+
+configure<JavaPluginConvention> {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 publishing {

@@ -21,6 +21,8 @@ dependencies {
     compileOnly("org.slf4j:slf4j-api:2.0.8")
     implementation("com.zaxxer:HikariCP:4.0.3")
     compileOnly("com.github.alazeprt:AConfiguration:1.0")
+    implementation("org.xerial:sqlite-jdbc:3.49.0.0")
+    implementation("com.mysql:mysql-connector-j:8.3.0")
 }
 
 tasks.withType<JavaCompile> {

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "me.regadpole"
-version = "1.0.2-SNAPSHOT"
+version = "1.0.3-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -18,6 +18,7 @@ dependencies {
     compileOnly("org.slf4j:slf4j-api:2.0.8")
     implementation("com.zaxxer:HikariCP:4.0.3")
     compileOnly("org.spongepowered:configurate-core:4.1.2")
+    compileOnly("org.spongepowered:configurate-yaml:4.1.2")
     testImplementation(kotlin("test"))
 }
 

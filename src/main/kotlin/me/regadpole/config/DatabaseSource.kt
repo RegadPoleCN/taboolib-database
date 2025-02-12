@@ -1,8 +1,19 @@
 package me.regadpole.config
 
 import org.spongepowered.configurate.ConfigurationNode
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader
+import java.io.File
 
-class DatabaseSource(private val config: ConfigurationNode) {
+class DatabaseSource() {
+    private lateinit var config: ConfigurationNode
+
+    constructor(node: ConfigurationNode) : this() {
+        this.config = node
+    }
+
+    constructor(file: File) : this() {
+        this.config = YamlConfigurationLoader.builder().file(file).build().load()
+    }
 
     /*method to obtain a string list from the yml file */
     fun getStringList( nodePath: String?): List<String?> {
